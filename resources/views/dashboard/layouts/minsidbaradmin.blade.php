@@ -54,16 +54,16 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
-                {{ trans('Sidebar.doctor') }}
+               posts
 
               </p>
               <i class="right fas fa-angle-left"></i>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="('doctors.index') }}" class="nav-link">
+                <a href="{{ route("posts.index") }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>{{ trans('Sidebar.doctor') }}</p>
+                  <p>all posts</p>
                 </a>
               </li>
               <li class="nav-item">

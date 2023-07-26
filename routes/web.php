@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -32,10 +33,12 @@ Route::group(
             return view('dashboard.writer.board');
         })->middleware(['auth', 'verified'])->name('writer/dashboard');
 
+// ###################  categories  #######################
+        Route::resource('categories',CategorieController::class);
 
-Route::resource('categories',CategorieController::class);
+// ################### posts ################
 
-
+        Route::resource('posts',PostController::class);
 
 
         require __DIR__.'/auth.php';

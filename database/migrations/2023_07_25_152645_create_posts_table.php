@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
+            $table->foreignId('categorie_id')->references('id')->on('categories')->cascadeOnDelete();
             $table->timestamps();
         });
     }
