@@ -15,4 +15,10 @@ class categories extends Controller
             $cats=categorie::all();
         return categoriesresource::collection($cats);
     }
+    public function show($id)
+    {
+        $cat= categorie::find($id);
+        return new categoriesresource($cat);
+
+    }
 }

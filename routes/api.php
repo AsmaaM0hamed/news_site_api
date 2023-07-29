@@ -20,4 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('categories', [categories::class,'index'])->middleware('lang');
+Route::middleware('lang')->group(function(){
+    Route::get('categories', [categories::class,'index']); //all categories
+    Route::get('/show/{show}',[categories::class,'show'])->name('show');
+
+});
+
+
