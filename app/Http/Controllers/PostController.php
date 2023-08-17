@@ -2,40 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\categorie;
 use App\Models\post;
+use App\Traits\image_upload;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ use image_upload;
     public function index()
     {
         //
+        $posts=post::all();
+        return view('dashboard.writer.posts.posts',compact('posts'));
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        //
+        $categories=categorie::all();
+        return view('dashboard.writer.posts.addposts',compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         //
+        $img= $this->StoreImage($request,'image','posts','image');
+
+        post::create([
+            'title'=>$request->name,
+            'description'=>$request->description,
+            'image'=>$img,
+            'bady'=>$request->body,
+            'categorie_id'=>$request->categorie_id,
+        ]);
+        return redirect()->route('posts.index')->with('add','posts done');
     }
 
     /**
@@ -49,37 +52,57 @@ class PostController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(post $post)
+    public function edit($id)
     {
         //
+        $post=post::find($id);
+        return view('dashboard.writer.posts.editposts',compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, post $post)
+
+    public function update(Request $request, $id)
     {
         //
+        if($request->has('image'))
+        {
+            // delet old image
+            $img=post::where('id',$id)->value('image');
+            $this->DeletImage('image','posts/'.$img);
+            // save new image
+            $img= $this->StoreImage($request,'image','posts','image');
+
+            // update data base
+            $post=post::find($id);
+            $post->update([
+                'title'=>$request->name,
+            'description'=>$request->description,
+            'image'=>$img,
+            'bady'=>$request->body,
+            ]);
+
+
+        }
+        else
+        {
+          // update data base
+          $post=post::find($id);
+          $post->update([
+              'name'=>$request->name,
+          'description'=>$request->description,
+          'bady'=>$request->body,
+          ]);
+
+        }
+        return redirect()->route('posts.index')->with('update','update done');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(post $post)
+
+    public function destroy($id)
     {
-        //
+        $img=post::where('id',$id)->value('image');
+        $this->DeletImage('image','posts/'.$img);
+
+        post::destroy($id);
+        return redirect()->back()->with('delete','delet done');
     }
 }
