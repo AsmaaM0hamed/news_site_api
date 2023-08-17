@@ -21,4 +21,6 @@ class categories extends Controller
         return new categoriesresource($cat);
 
     }
+    
+
 }
